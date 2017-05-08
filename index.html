@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>DragonDrop Remake</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="script.js"></script>
+        <link rel="stylesheet"  type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet"  type="text/css" href="style.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div id="drop-toolbox" class="navbar navbar-default navbar-fixed-top">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACi0lEQVR4Xu2Y8THFQBDGv1cBKkAF6IAKUAEqQCWoABWgAjpABagAFTA7XmZudpLIbu7bZJK7f96bc/Fuf/vt5fZbYOZjMfP4UQAUBcycQCmBmQugHIJDlcA2gGelvh0AL9GKHArAJYBTFewVgLO5AHgDsKGCfQewOQcAdfKv4g4vgyFK4AbAUUOmbwEcR6pgCACfAFYbgvwCsDZlAAcA7pIAH5bf95O5QwD3URCiFaDlf7IM9DoJOLQMIgGI7OX0r+T/nbwJpCyqIWUgbwP5pI9IAHK4NWW6ThkyRx+RAKSum2q97myQOfqIAiCyT2Uu8tdvApH8ShKxvA3oZRAFoE3+VcyDlEEUAGl85AbYduPTN0RpjORmSB0RAOTOL6d/NT5q+oDqb9IPrCdr5W0gc7QRAUA6vIskgrauT3eJ5wBkjjYiAHSRfxVgeBmwAeiAXtVZUJdZqf2tf86LbIpgA/BI2lIyvUGwAWjjo8uhpg9NqlHCBNBmfFgzRzNKmADajA8rAFqHyATQZnxYAdCMEhYA3dxYA65bTzFKWABy3Ou79A+9wTIAaONDNunp7HQHSTFKGAB05sT38/b22kMQCy2rUcIA0GZ8WCVLN0pyA+hifFghUI2S3AAYB1eOA7URem4AuvPbA/BkTblavwvgMZnLapTkBGAxPqxMaEZJTgDMLs7TVXaCnBOAxfjotLlkEc0oyQnAGtQo1hcAo0jDgJsoCnDA/3E8E/mIKammxcsoCoDIdDp+y5RU0+KigD8CugQ8EB2JbXyk1348m+/1gzkjb1CkKSbT4lIC9SVASGqvf2lKqmlxUUBRQC9pjvJhTwmMMhDvpgoAL7mpPFcUMJVMeuMoCvCSm8pzv8NVgEFoduxnAAAAAElFTkSuQmCC"
+            draggable="true"
+            ondragstart="drag(event)"
+            id="title"
+            class="drop-item center-block">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABXUlEQVR4Xu2YwRKDIAxE9f8/uj1oOx1by26CivB6XiB52QWn8zT4bx68/wkAOGBwAkRgcANwCRIBIjA4ASJgGOBhaFuQSsOVRGs3AGhhrEYN0nAlEQ5YCGwj4MAzBheWhupzmggdEG7HXxiqDwAG6BBhY/+sNFQfDjCwhwgb+2elofrOcED2A0qtEQAbC0ngJNHOh5C6Fgckwx0FLa2TREkH7PUfyuwfmKH9ACDYs5RhB+LncaGJ/ag3VZ9SfOqA2pYFwDeB1IBwAHdAmUDKYtwB+wR4BSLf7le8Aq8za02sqf2UV6CpgmvfKQAoPwJvBRGodGk1FSkicGEEjKMlaSiiVzpA6soQASByR+GAoy1m7J+VEoGzI5Cd2NHrpXhLorXS0v8CRzfk7i/1JokAsBAY3gGuBW+hdyJwi4bcIgHgEutNjwN6m6jbDw5wifWmxwG9TdTtBwe4xHrTPwGH11xB966IjQAAAABJRU5ErkJggg=="
+            draggable="true"
+            ondragstart="drag(event)"
+            id="textbox"
+            class="drop-item center-block">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACSUlEQVR4Xu2a/TXFQBDF76sAHVABOqACdEAHVEIHlEAHOkAHVIAKOHPO7jmxdvNmM7ObzWbyb5KXub+5dzYfb4OVb5uV64cBMAesnIBFYOUGsCFoEbAI/Cfw0zmUP66PRcAAmAP6JpAdgaWvFGGkDcDQ4JwhaA5Y+EjoMgL7AG4BHLnmvAK4AfAeaVZ3AEj8C4DdQOwXgOMIhO4APAI4S8TyCcB5sK87AJ+R7nvNFIGD3gGQ1XcSDvgAQBEZbt05YPURoA7T1A9d8O1WhXAlmM0BNKXJriU2gnAXLIPXLS2D966404IQuGCrO4DEX7rqKK8X3EoLHVcVwFC81/MA4KqQOM7PVgMQE18CQu5sqQJgTLwmhCmzpTiAmPg3p/ow8KgkDlNnS1EAKfEnTvgzAA0IktlSDMCYeL/+U16lEKSzpQgAjnjvfgkEjdmiDiBHvASC1mxRBTBF/BQImrNFDYBE/BACPayEDzLD1YFznZxYqQDgFMW5K6Nj6D0eDcYYBNrvb6P979GSSqtK+GDFhSAGQN3hFiWFEJ6fEp8TKzGA3KK0IGwTz4WgCoBblBQC2Z3e7XHfJ4zFIXRv9qexbVnkik0dNzYTcp4iUxDC604CoN35sKiaELIBlBbvYdSCkA1gLyOLS4hDNoDaX4dLO6F5ANtulnIHI31JGm6LAKAJQXwfUDsCw25pxEEMQDrYWjs/OwKtCZDWYwCSE9HtWP0/RaUWW9T5c074JkAZgCbaMGMR5oAZ4TdxaXNAE22YsQhzwIzwm7j0L1h+20EdU10IAAAAAElFTkSuQmCC"
+            draggable="true"
+            ondragstart="drag(event)"
+            id="image"
+            class="drop-item center-block">
+        </div>
+        <div id="drop-toolbox-offset" class="navbar navbar-default navbar-top"></div>
+        <div class="container">
+            <div id="canvas" ondragover='allowDrop(event)' ondrop='drop(event)'>
+            </div>
+        </div>
+    </body>
+</html>

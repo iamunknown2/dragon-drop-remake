@@ -1,0 +1,37 @@
+#canvas {
+    width: 100%;
+    float: right;
+    height: 100vh;
+}
+
+.textbox {
+    min-height: 3em;
+}
+
+h1.textbox {
+    min-height: 1em;
+}
+
+#drop-toolbox {
+    padding: 0.5em;
+    text-align: center;
+}
+
+#drop-toolbox-offset {
+    padding: 0.5em;
+    visibility: hidden;
+}
+
+.element-wrapper {
+    border: 2px dashed rgb(172, 172, 172);
+    padding: 10px;
+}
+
+.drop-location {
+    height: 1.5em;
+}
+
+.drop-item {
+    min-width: 30px;
+    display: inline-block;
+}
