@@ -1,6 +1,7 @@
-var deleteButton = "<button onclick='remove($(this).parent().parent())' class='pull-right'>Delete</button>";
-var upButton = "<button onclick='up($(this).parent().parent())' class='pull-right'>Up</button>";
-var downButton = "<button onclick='down($(this).parent().parent())' class='pull-right'>Down</button>";
+var deleteButton = "<button onclick='remove($(this).parent().parent())' class='delete pull-right'>Delete</button>";
+var upButton = "<button onclick='up($(this).parent().parent())' class='up pull-right'>Up</button>";
+var downButton = "<button onclick='down($(this).parent().parent())' class='down pull-right'>Down</button>";
+var cssAttributes = {};
 var textBoxToolBar =
 "<div class='textbox-toolbar'>" + 
     "<button onclick='document.execCommand(&quot;italic&quot;,false,null);'>" +
@@ -18,18 +19,21 @@ var dropJson = {
     "title":
     {
         "isText": true,
+        "oneOnly": false,
         "htmlTag": "h1",
         "default": "Title"
     },
     "textbox":
     {
         "isText": true,
+        "oneOnly": false,
         "htmlTag": "p",
         "default": "This is a text box <i>Enter text here...</i>"
     },
     "image":
     {
         "isText": false,
+        "oneOnly": false,
         "menu":
         "<div class='image-toolbar form-group'>" +
             "<label for='image-url'>Image URL:</label>" +
@@ -43,6 +47,19 @@ var dropJson = {
             downButton +
             upButton +
         "</div>"
+    },
+    "background-color":
+    {
+        "isText": false,
+        "oneOnly": true,
+        "menu":
+        "<div class='image-toolbar form-group'>" +
+            "<label for='color'>Select color...</label>" +
+            "<input type='color' class='color' name='color form-control' onchange='updateBackgroundColor()'>" +
+            deleteButton +
+            downButton +
+            upButton +
+        "</div>"
     }
 };
 
@@ -51,7 +68,7 @@ for (var i = 0; i < Object.keys(dropJson).length; i++) {
     var dropJsonElementName = Object.keys(dropJson)[i];
     if (dropJson[dropJsonElementName]["isText"]) {
         dropBlock[dropJsonElementName] =
-        "<div class='element-wrapper'>" +
+        "<div class='element-wrapper' type='" + dropJsonElementName + "'>" +
             textBoxToolBar +
             "<" + dropJson[dropJsonElementName]["htmlTag"] + " class='result textbox' contenteditable='true'>" +
             dropJson[dropJsonElementName]["default"] +
@@ -63,12 +80,11 @@ for (var i = 0; i < Object.keys(dropJson).length; i++) {
     }
     else {
         dropBlock[dropJsonElementName] =
-        "<div class='element-wrapper'>" +
+        "<div class='element-wrapper' type='" + dropJsonElementName + "'>" +
             dropJson[dropJsonElementName]["menu"] +
             "<div class='result'></div>" +
         "</div>" +
         dropLocation;
-        console.log(dropBlock[dropJsonElementName]);
     }
 }
 
@@ -77,14 +93,20 @@ function drag(event) {
 }
 
 function drop(event) {
+    var dropBlockElement = $($.parseHTML(event.dataTransfer.getData("dropBlock")));
+    var dropBlockElementType = dropBlockElement.attr('type');
+    if (dropJson[dropBlockElementType]["oneOnly"]) {
+        if ($("#canvas").children(".element-wrapper[type=" + dropBlockElementType + "]").length > 0) {
+            return "Fail: Only one element allowed";
+        }
+    }
     event.preventDefault();
     if ($(event.target).hasClass("drop-location")) {
-        $(event.target).after(event.dataTransfer.getData("dropBlock"));
+        $(event.target).after($('<div/>').html(event.dataTransfer.getData("dropBlock")));
         $(event.target).next(".element-wrapper").attr("id", parseInt($(event.target).prev(".element-wrapper").attr("id")) + 1);
         var prevThis;
         $("#canvas").children(".element-wrapper").each(function(index) {
             if ($(this).attr("id") == $(prevThis).attr("id")) {
-                console.log("test")
                 $(this).attr("id", parseInt($(this).attr("id")) + 1);
             }
             prevThis = this;
@@ -120,7 +142,6 @@ function sort() {
 }
 
 function up(elementWrapper) {
-    console.log($(elementWrapper).prevAll(".element-wrapper:first").attr("id"));
     $(elementWrapper).attr("id", parseInt($(elementWrapper).attr("id")) - 1);
     $(elementWrapper).prevAll(".element-wrapper:first").attr("id", parseInt($(elementWrapper).attr("id")) + 1);
     sort();
@@ -134,14 +155,19 @@ function down(elementWrapper) {
 
 function exportToHTML() {
     var htmlArray = [];
-    var finalHTML = "";
+    var finalBody = "";
     $("#canvas").find(".result").each(function() {
-        htmlArray.push($(this).removeAttr("class").removeAttr("contenteditable"));
+        htmlArray.push($(this).removeAttr("contenteditable"));
     });
     $.each(htmlArray, function(index, html) {
-        finalHTML += $(html).prop("outerHTML"); 
+        finalBody += $(html).prop("outerHTML"); 
     });
-    return finalHTML;
+    var finalHead = "<head><title>" + $("h1").first().text() + "</title></head>";
+    return finalHead + finalBody;
+}
+
+function updateBackgroundColor() {
+    $("#canvas").css("background-color", $("#canvas").find("input.color[type=color]").val());
 }
 
 $(document).ready(function() {
