@@ -156,11 +156,16 @@ function allowDrop(event) {
     event.preventDefault();
 }
 
-function loadImage(formElement) {
-    $(formElement).siblings(".result").html("<img src='" +
-    $(formElement).children(".image-url").val() +
-    "'/>");
-    $(formElement).siblings(".result").children().css("width", $(formElement).children(".image-size").val() + "%");
+function up(elementWrapper) {
+    $(elementWrapper).attr("id", parseInt($(elementWrapper).attr("id")) - 1);
+    $(elementWrapper).prevAll(".element-wrapper:first").attr("id", parseInt($(elementWrapper).attr("id")) + 1);
+    sort();
+}
+
+function down(elementWrapper) {
+    $(elementWrapper).attr("id", parseInt($(elementWrapper).attr("id")) + 1);
+    $(elementWrapper).nextAll(".element-wrapper:first").attr("id", parseInt($(elementWrapper).attr("id")) - 1);
+    sort();
 }
 
 function remove(elementWrapper) {
@@ -176,17 +181,6 @@ function sort() {
     $("#canvas").html(htmlToBeAdded);
 }
 
-function up(elementWrapper) {
-    $(elementWrapper).attr("id", parseInt($(elementWrapper).attr("id")) - 1);
-    $(elementWrapper).prevAll(".element-wrapper:first").attr("id", parseInt($(elementWrapper).attr("id")) + 1);
-    sort();
-}
-
-function down(elementWrapper) {
-    $(elementWrapper).attr("id", parseInt($(elementWrapper).attr("id")) + 1);
-    $(elementWrapper).nextAll(".element-wrapper:first").attr("id", parseInt($(elementWrapper).attr("id")) - 1);
-    sort();
-}
 
 function exportToHTML() {
     var htmlArray = [];
@@ -207,6 +201,13 @@ function exportToHTML() {
     });
     var finalHead = "<head><title>" + $("h1").first().text() + "</title><style>" + finalCSS + "</style></head>";
     return finalHead + finalBody;
+}
+
+function loadImage(formElement) {
+    $(formElement).siblings(".result").html("<img src='" +
+    $(formElement).children(".image-url").val() +
+    "'/>");
+    $(formElement).siblings(".result").children().css("width", $(formElement).children(".image-size").val() + "%");
 }
 
 function updateBackgroundColor(selector) {
