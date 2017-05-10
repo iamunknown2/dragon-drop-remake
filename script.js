@@ -191,13 +191,21 @@ function down(elementWrapper) {
 function exportToHTML() {
     var htmlArray = [];
     var finalBody = "";
+    var finalCSS = "";
+    $.each(cssAttributes, function(index1, value1) {
+        finalCSS += index1 + "{";
+        $.each(value1, function(index2, value2) {
+            finalCSS += index2 + ":" + value2 + ";";
+        });
+        finalCSS += "}";
+    })
     $("#canvas").find(".result").each(function() {
         htmlArray.push($(this).removeAttr("contenteditable"));
     });
     $.each(htmlArray, function(index, html) {
         finalBody += $(html).prop("outerHTML"); 
     });
-    var finalHead = "<head><title>" + $("h1").first().text() + "</title></head>";
+    var finalHead = "<head><title>" + $("h1").first().text() + "</title><style>" + finalCSS + "</style></head>";
     return finalHead + finalBody;
 }
 
