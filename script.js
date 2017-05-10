@@ -53,9 +53,36 @@ var dropJson = {
         "isText": false,
         "oneOnly": true,
         "menu":
-        "<div class='image-toolbar form-group'>" +
+        "<div class='background-color-toolbar form-group'>" +
             "<label for='color'>Select color...</label>" +
-            "<input type='color' class='color' name='color form-control' onchange='updateBackgroundColor()'>" +
+            "<input type='color' class='color' name='color' value='#ffffff' onchange='updateBackgroundColor(&quot;#&quot; + $(this).parent().parent().parent().parent().attr(&quot;id&quot;))' style='margin-left: 5px;'>" +
+            deleteButton +
+            downButton +
+            upButton +
+        "</div>"
+    },
+    "div":
+    {
+        "isText": false,
+        "oneOnly": false,
+        "menu":
+        "<div class='background-color-toolbar form-group'>" +
+            deleteButton + downButton + upButton +
+        "</div>",
+        "nestable": true
+    },
+    "font-family":
+    {
+        "isText": false,
+        "oneOnly": true,
+        "menu":
+        "<div class='font-family-toolbar form-group'>" +
+            "<label for='font-family'>Select font family...</label>" +
+            "<select class='form-control font-family' name='font-family' onchange='updateFontFamily(&quot;#&quot; + $(this).parent().parent().parent().parent().attr(&quot;id&quot;))'>" +
+                "<option value='arial'>Arial</option>" +
+                "<option value='Open Sans'>Open Sans</option>" +
+                "<option value='Ubuntu'>Ubuntu</option>" +
+            "</select>" +
             deleteButton +
             downButton +
             upButton +
@@ -66,23 +93,31 @@ var dropJson = {
 var dropBlock = {};
 for (var i = 0; i < Object.keys(dropJson).length; i++) {
     var dropJsonElementName = Object.keys(dropJson)[i];
+    if (dropJson[dropJsonElementName]["nestable"]) {
+        nestCode = dropLocation;
+    }
+    else {
+        nestCode = "";
+    }
     if (dropJson[dropJsonElementName]["isText"]) {
         dropBlock[dropJsonElementName] =
-        "<div class='element-wrapper' type='" + dropJsonElementName + "'>" +
+        "<div class='element-wrapper' type='" + dropJsonElementName + "' >" +
             textBoxToolBar +
             "<" + dropJson[dropJsonElementName]["htmlTag"] + " class='result textbox' contenteditable='true'>" +
             dropJson[dropJsonElementName]["default"] +
             "</" +
             dropJson[dropJsonElementName]["htmlTag"].split(" ")[0] +
             ">" +
+            nestCode +
         "</div>" +
         dropLocation;
     }
     else {
         dropBlock[dropJsonElementName] =
-        "<div class='element-wrapper' type='" + dropJsonElementName + "'>" +
+        "<div class='element-wrapper' type='" + dropJsonElementName + "' >" +
             dropJson[dropJsonElementName]["menu"] +
             "<div class='result'></div>" +
+            nestCode +
         "</div>" +
         dropLocation;
     }
@@ -96,7 +131,7 @@ function drop(event) {
     var dropBlockElement = $($.parseHTML(event.dataTransfer.getData("dropBlock")));
     var dropBlockElementType = dropBlockElement.attr('type');
     if (dropJson[dropBlockElementType]["oneOnly"]) {
-        if ($("#canvas").children(".element-wrapper[type=" + dropBlockElementType + "]").length > 0) {
+        if ($(event.target).siblings(".element-wrapper[type=" + dropBlockElementType + "]").length + $(event.target).children(".element-wrapper[type=" + dropBlockElementType + "]").length > 0) {
             return "Fail: Only one element allowed";
         }
     }
@@ -166,10 +201,45 @@ function exportToHTML() {
     return finalHead + finalBody;
 }
 
-function updateBackgroundColor() {
-    $("#canvas").css("background-color", $("#canvas").find("input.color[type=color]").val());
+function updateBackgroundColor(selector) {
+    var realSelector = selector === "#undefined" ? "#canvas" : selector;
+    if (realSelector == "#canvas") {
+        $(realSelector).css("background-color", $(realSelector).children(".element-wrapper").children(".form-group").children("input.color").val());
+    }
+    else {
+        $(realSelector).css("background-color", $(realSelector).find("input.color").val());
+    }
+    if (cssAttributes[realSelector] === undefined) {
+        cssAttributes[realSelector] = {};
+    }
+    if (realSelector == "#canvas") {
+        cssAttributes[realSelector]["background-color"] = $(realSelector).children(".element-wrapper").children(".form-group").children("input.color").val();
+    }
+    else {
+        cssAttributes[realSelector]["background-color"] = $(realSelector).find("input.color").val();
+    }
+}
+
+function updateFontFamily(selector) {
+    var realSelector = selector === "#undefined" ? "#canvas" : selector;
+    if (realSelector == "#canvas") {
+        $(realSelector).css("font-family", $(realSelector).children(".element-wrapper").children(".form-group").children("select.font-family").val());
+    }
+    else {
+        $(realSelector).css("font-family", $(realSelector).find("select.font-family").val());
+        console.log($(realSelector).css("font-family"));
+    }
+    if (cssAttributes[realSelector] === undefined) {
+        cssAttributes[realSelector] = {};
+    }
+    if (realSelector == "#canvas") {
+        cssAttributes[realSelector]["font-family"] = $(realSelector).children(".element-wrapper").children(".form-group").children("select.font-family").val();
+    }
+    else {
+        cssAttributes[realSelector]["font-family"] = $(realSelector).find("select.font-family").val();
+    }
 }
 
 $(document).ready(function() {
     $("#drop-toolbox-offset").html($("#drop-toolbox").html());
-})
+});
