@@ -116,11 +116,18 @@ for (var i = 0; i < Object.keys(dropJson).length; i++) {
         dropBlock[dropJsonElementName] =
         "<div class='element-wrapper' type='" + dropJsonElementName + "' >" +
             dropJson[dropJsonElementName]["menu"] +
-            "<div class='result'></div>" +
-            nestCode +
+            "<div class='result'>" +
+                nestCode +
+            "</div>" +
         "</div>" +
         dropLocation;
     }
+}
+
+function updateId() {
+    $("#canvas").find(".element-wrapper").each(function(index) {
+        $(this).attr("id", index + 1);
+    })
 }
 
 function drag(event) {
@@ -137,18 +144,21 @@ function drop(event) {
     }
     event.preventDefault();
     if ($(event.target).hasClass("drop-location")) {
-        $(event.target).after($('<div/>').html(event.dataTransfer.getData("dropBlock")));
-        $(event.target).next(".element-wrapper").attr("id", parseInt($(event.target).prev(".element-wrapper").attr("id")) + 1);
+        $(event.target).after(event.dataTransfer.getData("dropBlock"));
+        updateId();
+        /* $(event.target).next(".element-wrapper").attr("id", parseInt($(event.target).prev(".element-wrapper").attr("id")) + 1);
         var prevThis;
-        $("#canvas").children(".element-wrapper").each(function(index) {
+        var loopObjects = $(event.target).attr("id") == "canvas" ? $("#canvas").children(".element-wrapper") : $(event.target).siblings(".element-wrapper");
+        $("#canvas").find(".element-wrapper").each(function(index) {
             if ($(this).attr("id") == $(prevThis).attr("id")) {
                 $(this).attr("id", parseInt($(this).attr("id")) + 1);
             }
             prevThis = this;
         });
+        */
     } else if ($(event.target).is("#canvas")) {
         $("#canvas").append(event.dataTransfer.getData("dropBlock"));
-        $("#canvas").children(".element-wrapper").last().attr("id", $("#canvas").children(".element-wrapper").length);
+        updateId();
     }
 }
 
@@ -159,28 +169,33 @@ function allowDrop(event) {
 function up(elementWrapper) {
     $(elementWrapper).attr("id", parseInt($(elementWrapper).attr("id")) - 1);
     $(elementWrapper).prevAll(".element-wrapper:first").attr("id", parseInt($(elementWrapper).attr("id")) + 1);
-    sort();
+    sort($(elementWrapper).parent());
+    updateId();
 }
 
 function down(elementWrapper) {
     $(elementWrapper).attr("id", parseInt($(elementWrapper).attr("id")) + 1);
     $(elementWrapper).nextAll(".element-wrapper:first").attr("id", parseInt($(elementWrapper).attr("id")) - 1);
-    sort();
+    sort($(elementWrapper).parent());
+    updateId();
+}
+
+function sort(wrapperContainer) {
+    htmlToBeAdded = "";
+    var elementWrappers = $(wrapperContainer).children(".element-wrapper")
+    elementWrappers.sort(function(a, b) {
+        return parseInt($(a).attr("id")) - parseInt($(b).attr("id"));
+    })
+    elementWrappers.each(function() {
+        htmlToBeAdded += $(this).prop("outerHTML") + dropLocation;
+    });
+    $(wrapperContainer).html(htmlToBeAdded);
 }
 
 function remove(elementWrapper) {
     $(elementWrapper).next().remove();
     $(elementWrapper).remove();
 }
-
-function sort() {
-    htmlToBeAdded = "";
-    $("#canvas").children(".element-wrapper").each(function(index) {
-        htmlToBeAdded += $("#" + (index + 1).toString()).prop("outerHTML") + dropLocation;
-    });
-    $("#canvas").html(htmlToBeAdded);
-}
-
 
 function exportToHTML() {
     var htmlArray = [];
