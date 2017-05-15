@@ -191,6 +191,7 @@ function sort(wrapperContainer) {
 function remove(elementWrapper) {
     $(elementWrapper).next().remove();
     $(elementWrapper).remove();
+    updateId();
 }
 
 function exportToHTML() {
