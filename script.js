@@ -127,7 +127,14 @@ for (var i = 0; i < Object.keys(dropJson).length; i++) {
 function updateId() {
     $("#canvas").find(".element-wrapper").each(function(index) {
         $(this).attr("id", index + 1);
-    })
+    });
+    $(".up, .down").css("display", "inline-block");
+    $("#canvas").children(".element-wrapper").first().children().children(".up").css("display", "none");
+    $("#canvas").children(".element-wrapper").last().children().children(".down").css("display", "none");
+    $(".element-wrapper[type=div]").each(function(index) {
+        $(this).find(".element-wrapper").first().find(".up").css("display", "none");
+        $(this).find(".element-wrapper").last().find(".down").css("display", "none");
+    });
 }
 
 function drag(event) {
@@ -145,21 +152,10 @@ function drop(event) {
     event.preventDefault();
     if ($(event.target).hasClass("drop-location")) {
         $(event.target).after(event.dataTransfer.getData("dropBlock"));
-        updateId();
-        /* $(event.target).next(".element-wrapper").attr("id", parseInt($(event.target).prev(".element-wrapper").attr("id")) + 1);
-        var prevThis;
-        var loopObjects = $(event.target).attr("id") == "canvas" ? $("#canvas").children(".element-wrapper") : $(event.target).siblings(".element-wrapper");
-        $("#canvas").find(".element-wrapper").each(function(index) {
-            if ($(this).attr("id") == $(prevThis).attr("id")) {
-                $(this).attr("id", parseInt($(this).attr("id")) + 1);
-            }
-            prevThis = this;
-        });
-        */
     } else if ($(event.target).is("#canvas")) {
         $("#canvas").append(event.dataTransfer.getData("dropBlock"));
-        updateId();
     }
+    updateId();
 }
 
 function allowDrop(event) {
@@ -182,11 +178,11 @@ function down(elementWrapper) {
 
 function sort(wrapperContainer) {
     htmlToBeAdded = "";
-    var elementWrappers = $(wrapperContainer).children(".element-wrapper")
+    var elementWrappers = $(wrapperContainer).children(".element-wrapper");
     elementWrappers.sort(function(a, b) {
         return parseInt($(a).attr("id")) - parseInt($(b).attr("id"));
     })
-    elementWrappers.each(function() {
+    elementWrappers.each(function(index) {
         htmlToBeAdded += $(this).prop("outerHTML") + dropLocation;
     });
     $(wrapperContainer).html(htmlToBeAdded);
