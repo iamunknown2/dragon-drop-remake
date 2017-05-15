@@ -177,7 +177,7 @@ function down(elementWrapper) {
 }
 
 function sort(wrapperContainer) {
-    htmlToBeAdded = "";
+    htmlToBeAdded = dropLocation;
     var elementWrappers = $(wrapperContainer).children(".element-wrapper");
     elementWrappers.sort(function(a, b) {
         return parseInt($(a).attr("id")) - parseInt($(b).attr("id"));
